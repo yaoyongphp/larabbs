@@ -1,0 +1,225 @@
+2.3. 创建应用--------------------
+
+
+由于我们接下来的开发都会在Homestead上进行，因此，在开始本章教程之前，请保证你的Homestead虚拟机已成功开启并登录。使用下面命令来启动和登录Homestead
+
+PS C:\Users\ctocn> cd Homestead
+PS C:\Users\ctocn\Homestead> vagrant up
+......
+==> homestead-7: flag to force provisioning. Provisioners marked to run always will still run.
+PS C:\Users\ctocn\Homestead>
+PS C:\Users\ctocn\Homestead> vagrant ssh
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-65-generic x86_64)
+ _                               _                 _
+| |                             | |               | |
+| |__   ___  _ __ ___   ___  ___| |_ ___  __ _  __| |
+| '_ \ / _ \| '_ ` _ \ / _ \/ __| __/ _ \/ _` |/ _` |
+| | | | (_) | | | | | |  __/\__ \ ||  __/ (_| | (_| |
+|_| |_|\___/|_| |_| |_|\___||___/\__\___|\__,_|\__,_|
+
+* Homestead v12.8.0 | Thanks for using Homestead
+* Settler v11.5.0
+Last login: Thu Dec  9 17:24:39 2021 from 10.0.2.2
+vagrant@homestead:~$
+vagrant@homestead:~$ --在虚拟机中进入Code文件夹
+vagrant@homestead:~$ cd Code/
+vagrant@homestead:~/Code$
+
+
+注意：本书中因为虚拟机的存在，我们会有两个运行命令行的环境，一个是主机，另一个是 Homestead 虚拟机。我们会在命令的前面使用『命令行提示符』来区分主机和 Homestead。请记住以 > 开头的命令是运行在主机里，$ 开头的命令是运行在 Homestead 虚拟机里。详见 写作约定 - 命令行提示符
+
+1.Composer加速
+
+在创建项目之前，我们先在虚拟机中运行以下命令来实现 Composer 安装加速
+
+vagrant@homestead:~/Code$ composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+vagrant@homestead:~/Code$
+
+2.创建LaraBBS应用
+
+下面让我们来使用Composer创建一个名为LaraBBS的应用，后面我们将基于这个应用做更多的功能完善
+
+vagrant@homestead:~/Code$
+vagrant@homestead:~/Code$ composer create-project laravel/laravel larabbs --prefer-dist "8.*"
+......
+Application key set successfully.
+vagrant@homestead:~/Code$
+
+3.修改hosts
+
+每个 Laravel 项目创建完成后的第一步，即是对 Homestead 进行配置，让应用能在 Homestead 的开发环境上跑起来。为了方便记忆，一般我们都会将 IP 映射为域名，我们能够通过设置 hosts 文件来指定 IP 与域名之间的映射关系，由于我们在 Homestead 上默认使用 192.168.10.10 来作为虚拟机的 IP 的地址，因此我们需要在系统的 hosts 文件中将域名指向该 IP 上
+
+Windows下打开Hosts文件：C:\Windows\System32\drivers\etc\hosts
+
+192.168.10.10    larabbs.test
+
+4.新增站点
+
+在C:\Users\ctocn\Homestead\Homestead.yaml文件中新增larabbs应用的sites和databases的相关设置
+
+
+C:\Users\ctocn\Homestead> --主要设置了sites和databases两项。 sites会将域名larabbs.test映射到虚拟机的/home/vagrant/Code/larabbs/public文件夹上，而databases则为新创建的项目指定数据库名
+C:\Users\ctocn\Homestead> vim Homestead.yaml
+---
+ip: "192.168.10.10"
+memory: 2048
+cpus: 1
+provider: virtualbox
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
+    - ~/.ssh/id_rsa.pub
+
+folders:
+    - map: ~/Code
+      to: /home/vagrant/Code
+
+sites:
+    - map: homestead.test
+      to: /home/vagrant/Code/public
+      php: '8.0' #新增配置，设置php版本
+    - map: larabbs.test #新增配置，这是域名
+      to: /home/vagrant/Code/larabbs/public #新增配置，注意：是虚拟机里面地址
+      php: '8.0' #新增配置，设置php版本
+
+databases:
+    - homestead
+    - larabbs #新增配置,设置生成数据库名larabbs
+
+#新增配置
+variables:
+    - key: APP_ENV
+      value: local
+
+#新增配置
+features:
+    - mysql: true
+
+
+# blackfire:
+#     - id: foo
+#       token: bar
+#       client-id: foo
+#       client-token: bar
+
+# ports:
+#     - send: 50000
+#       to: 5000
+#     - send: 7777
+#       to: 777
+#       protocol: udp
+C:\Users\ctocn\Homestead>
+
+4.重启虚拟机
+
+当我们每次对C:\Users\ctocn\Homestead\Homestead.yaml文件进行了更改之后，都需要运行下面命令来使其更改生效
+
+PS C:\Users\ctocn> cd Homestead
+PS C:\Users\ctocn\Homestead> --重新加载C:\Users\ctocn\Homestead\Homestead.yaml配置
+PS C:\Users\ctocn\Homestead> vagrant provision
+......
+homestead-7: Running: C:/Users/ctocn/AppData/Local/Temp/vagrant-shell20211210-5488-16ykmdm.sh
+PS C:\Users\ctocn\Homestead> --重启虚拟机使更改生效
+PS C:\Users\ctocn\Homestead> vagrant reload
+......
+==> homestead-7: flag to force provisioning. Provisioners marked to run always will still run.
+PS C:\Users\ctocn\Homestead> --进入虚拟机
+PS C:\Users\ctocn\Homestead> vagrant ssh
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-65-generic x86_64)
+ _                               _                 _
+| |                             | |               | |
+| |__   ___  _ __ ___   ___  ___| |_ ___  __ _  __| |
+| '_ \ / _ \| '_ ` _ \ / _ \/ __| __/ _ \/ _` |/ _` |
+| | | | (_) | | | | | |  __/\__ \ ||  __/ (_| | (_| |
+|_| |_|\___/|_| |_| |_|\___||___/\__\___|\__,_|\__,_|
+
+* Homestead v12.8.0 | Thanks for using Homestead
+* Settler v11.5.0
+Last login: Thu Dec  9 17:31:59 2021 from 10.0.2.2
+vagrant@homestead:~$
+vagrant@homestead:~$ ls
+Code  laravel-ubuntu-init
+vagrant@homestead:~$
+
+5.env文件
+
+接下来，我们还需要对应用根目录下的 .env 文件进行设置，为应用指定数据库名称 larabbs
+
+vagrant@homestead:~$ cd Code/
+vagrant@homestead:~/Code$ ls
+larabbs  larabbsapi
+vagrant@homestead:~/Code$ cd larabbs
+vagrant@homestead:~/Code/larabbs$ vim .env
+//.......
+DB_DATABASE=larabbs
+DB_USERNAME=root
+DB_PASSWORD=123456
+vagrant@homestead:~/Code/larabbs$
+
+在 .env 文件中，除了 DB_DATABASE 之外还有其它的设置信息，接下来让我们对里面的几项配置信息进行简单讲解。
+
+一般来说，在进行实际应用的开发过程中，应用会拥有不同的运行环境，通常会有以下环境：
+
+.本地开发环境
+.测试环境
+.生产环境
+
+在不同环境中，我们可能会使用不同的数据库或邮件发送驱动等配置，这时候则需要通过 .env 文件来针对不同的运行环境作不同的设置。比如上面我们所编辑的 .env 文件配置将应用在本地的开发环境(local)上。
+.env支持对应用进行简单的配置，比如你可以通过 APP_ENV 来设定当前应用的运行环境，使用 APP_DEBUG 来设定是否在应用报错时显示调试信息，使用 APP_KEY 来生成应用的密钥用于加密一些较为敏感的数据。
+
+APP_NAME=LaraBBS
+APP_ENV=local
+APP_KEY=base64:tXWqlwkQO22BRP/Lu/hhPqdSO52b5z0vCtig+SHfOzQ=
+APP_DEBUG=true
+APP_URL=http://larabbs.test
+
+我们也可以对数据库的连接方式、数据库名、用户名密码等做相关配置
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=larabbs
+DB_USERNAME=root
+DB_PASSWORD=123456
+
+缓存、会话、队列等驱动的相关配置信息
+
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_CONNECTION=sync
+
+Redis 相关的配置信息
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+邮件相关的配置信息
+
+MAIL_DRIVER=smtp
+MAIL_HOST=mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+
+在完成对.env文件的设置后，我们便可以通过传参给getenv方法来获取到.env文件中指定的值，如调用getenv('APP_ENV')将返回local
+
+6.访问应用
+
+现在让我们在 Chrome 浏览器中打开 larabbs.test 你应该能看到有如下界面显示
+
+如下图1
+
+7.Git提交
+
+为了在接下来更好的追踪项目代码的更改，我们还需要将新建的 Laravel 项目纳入到 Git 版本管理中
+
+
+
+
+
+
+
