@@ -217,9 +217,54 @@ MAIL_ENCRYPTION=null
 
 为了在接下来更好的追踪项目代码的更改，我们还需要将新建的 Laravel 项目纳入到 Git 版本管理中
 
+vagrant@homestead:~$ cd Code/
+vagrant@homestead:~/Code$ cd larabbs
+vagrant@homestead:~/Code/larabbs$ git init
+Initialized empty Git repository in /home/vagrant/Code/larabbs/.git/
+vagrant@homestead:~/Code/larabbs$ git add -A
+vagrant@homestead:~/Code/larabbs$ git commit -m "初始化"
+......
+vagrant@homestead:~/Code/larabbs$
+
+
+我们前面已讨论过关于使用 GitHub 的种种好处，而现在是我们开始正式应用它的时候了。熟悉一个东西最快的方法就是不断训练，不断重复，因此本教程接下来项目构建的代码都将统一托管到 GitHub 上，以便让你对 GitHub 的使用更加熟悉。现在，我们需要在 GitHub 上新建一个名为 larabbs 的项目 打开https://github.com/new创建新项目，如下图2，并将代码推送上去
+
+
+vagrant@homestead:~/Code/larabbs$ ssh-keygen -t rsa -C "yaoyongphp@163.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
+/home/vagrant/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/vagrant/.ssh/id_rsa
+Your public key has been saved in /home/vagrant/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:S6ZiWsFJXQYv3r88exOGxFPpwcdT1FK7fi+UqnPghcY yaoyongphp@163.com
+The key's randomart image is:
++---[RSA 3072]----+
+|      ..o  . o +=|
+|     . +    = = o|
+|    . o .. o o + |
+|   o o o  + .   .|
+|    + . So +   o |
+|     . + oE + +  |
+|    + . .o.+ + ..|
+|   + .   .+.= . o|
+|  .       =B . ..|
++----[SHA256]-----+
+vagrant@homestead:~/Code/larabbs$ cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDPGu1lfKbhncvwXfkhpdE0vtqrZiO5CoCFFwYskgOmieLB+CwPi0S8LCRbTyYimUWP+srrUmmexzBzsbba3Ckz+4kadB5tsv5C/EzZb/niUMubOTUMDS2d/3OFrB97oCj1HWMaqPAvIQxIL0z3LeHahwJA5E9j515kRlHUMGHCNtARNZTVL9wp6FGR9dX6nKsIgp+aWmU+lxvOjtyfTRRj7ViJWUTGyeYeNdqBjLlaWksiavVyKBVVxBk0uEEdHam4sM31OFrNwIuU5Nf7GkfHeAX/151tRS0l0Jx8algXOyIIH89WBkIrx1vR1o1s+5fzjK/p88WUj+sN6biK9/5Hm7wDWSKPUHMJTzusSCA2WNs72Wa88LKYntvCzCFPpSFUfHihfiA+k9SvkL2ScjgIfMqEYGy2yc4AzrbRSacrjMKD06bAUtvS8/igIZjjQ1ZnFZzlHjfK/SzIFyQ+/Uo/BZe6+0alWESolEHOEBbPpjS7zEA2RCWz7oHbs7/cF6E= yaoyongphp@163.com
+vagrant@homestead:~/Code/larabbs$
+
+如下图2-3
 
 
 
+vagrant@homestead:~/Code/larabbs$ --把下面的<username>替换为你的用户名
+vagrant@homestead:~/Code/larabbs$ git remote add origin git@github.com:yaoyongphp/larabbs.git
+vagrant@homestead:~/Code/larabbs$ git push -u origin master
 
+或
 
 
